@@ -27,3 +27,6 @@ jobs:
       - name: Print the runner operating system
         run: |
           echo "Runner OS: ${{ runner.os }}"
+
+      - name: intentional failure
+        run: exit 1
