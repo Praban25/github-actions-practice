@@ -24,9 +24,9 @@ jobs:
       - name: List the files in repo
         run: ls ${{ github.workspace }}
 
-      - name: invalid command
-        run: helloworld  
-
       - name: Print the runner operating system
         run: |
           echo "Runner OS: ${{ runner.os }}"
+
+      - name: success
+        run: echo "workflow completed successfully"
