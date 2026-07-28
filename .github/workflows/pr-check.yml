@@ -11,7 +11,7 @@ name: PR Check
 
 jobs:
     pr-check:
-        runs-on: ubuntu latest
+        runs-on: ubuntu-latest
 
         steps:
             - name: Print PR Branch
