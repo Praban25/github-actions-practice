@@ -9,11 +9,11 @@ name: PR Check
             - opened
             - synchronize
 
-Jobs:
+jobs:
     pr-check:
         runs-on: ubuntu latest
 
         steps:
             - name: Print PR Branch
               run: |
-              echo "PR check running for Branch: ${{ github.head_ref }}"
+                echo "PR check running for Branch: ${{ github.head_ref }}"
