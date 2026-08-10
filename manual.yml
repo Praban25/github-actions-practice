@@ -1,0 +1,21 @@
+name: Manual Environment Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the Environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  manual-deployment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print Environment
+        run: |
+          echo "Selected Environment: ${{ inputs.environment }}"
