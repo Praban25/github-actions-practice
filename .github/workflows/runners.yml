@@ -1,0 +1,51 @@
+name: GitHub Hosted Runners
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ubuntu-runner:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Show Ubuntu Runner Details
+        run: |
+          echo "OS Name: "
+          uname -s
+
+          echo "Hostname: "
+          hostname
+
+          echo "Current user: "
+          whoami
+
+  windows-runner:
+    runs-on: windows-latest
+
+    steps:
+      - name: Show Windows Runner Details
+        shell: pwsh
+        run: |
+          Write-Host "OS Name: "
+          [System.Environment]::OSVersion.VersionString
+
+          Write-Host "Hostname: "
+          hostname
+
+          Write-Host "Current user: "
+          whoami
+
+  macos-runner:
+    runs-on: macos-latest
+      
+    steps:
+      - name: Show MacOS Runner Details
+        run: |
+          echo "OS Name: " 
+          uname -s
+          
+          echo "Hostname: "
+          hostname
+          
+          echo "Current user: "
+          whoami
