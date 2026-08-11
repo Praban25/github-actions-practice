@@ -1,0 +1,27 @@
+name: Preinstalled Tools for Ubuntu-Latest
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check-tools:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: check pre-installed tools
+        run: |
+          echo "--Docker Version--"
+          docker --version
+
+          echo "--Python Version--"
+          python3 --version
+
+          echo "--node.js Version--"
+          node --version
+
+          echo "--GIT Version--"
+          git --version
+
+          echo "--Preinstalled tools list--"
+          apt list --installed
+
