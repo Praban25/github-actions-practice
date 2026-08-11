@@ -1,7 +1,7 @@
 name: GitHub Hosted Runners
 
 on:
-  workflow_displatch:
+  workflow_dispatch:
 
 jobs:
   ubuntu-runner:
