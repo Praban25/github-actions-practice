@@ -21,3 +21,24 @@ jobs:
 
           echo "==Working Directory=="
           pwd
+
+      - name: Create Test File
+        run: |
+          echo "This Test file created by GitHub Actions on my self-hosted runner." > github-runner-test.txt
+
+      - name: Verify test file
+        run: |
+          echo "Verify File Creation"
+          ls -l github-runner-test.txt
+
+          if [ -f github-runner-test.txt ]; then
+            echo "File created successfully"
+          else
+            echo "File not created"
+            exit 1
+          fi
+
+      - name: Display file contents
+        run: |
+          echo "==File Contents=="
+          cat github-runner-test.txt
