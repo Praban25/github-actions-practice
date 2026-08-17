@@ -1,0 +1,23 @@
+name: Self Hosted Runner Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-self-hosted-runner:
+    runs-on: self-hosted
+
+    steps:
+      - name: show runner information
+        run: |
+          echo "==Operating System=="
+          uname -a
+
+          echo "==HostName=="
+          hostname
+
+          echo "==Current User=="
+          whoami
+
+          echo "==Working Directory=="
+          pwd
