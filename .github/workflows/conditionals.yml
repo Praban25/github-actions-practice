@@ -1,0 +1,36 @@
+name: Conditionals and Error Handling
+
+on:
+  push:
+    branches: [ main, feature/* ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  push-only-job:
+    # Conditional Job : It runs Only on push events, NOT on pull request.
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Step 1 - Intentional Failure (ignored)
+      # continue-on-error prevents stopping the job from step failure
+        continue-on-error: true
+        run: |
+          echo "Simulating a failing step.."
+          exit 1
+
+      - name: Step 2 - Failure Handler
+      # conditional - Runs Only when the previous step in this job Failed
+        if: failure()
+        run: echo "Execution Caught!! A Previuos Step FAILED..!!"
+
+      - name: Step 3 - Branch Specific Execution
+      # conditional: Runs ONLY when the target branch is MAIN
+        if: github.ref == 'refs/heads/main'
+        run: echo "This step runs exclusively on MAIN Branch."
+
+
+
+          
