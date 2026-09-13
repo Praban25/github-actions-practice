@@ -1,0 +1,28 @@
+name: Pass Outputs Between Jobs
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+
+jobs:
+  generate-date:
+    runs-on: ubuntu-latest
+    outputs:
+      current_date: ${{ steps.set-date.outputs.date_str }}
+    steps:
+      - name: Generate Today's date
+        id: set-date
+        run: |
+          TODAY=$(date +'%y-%m-%d')
+          echo "date_str=$TODAY" >> $GITHUB_OUTPUT
+
+  read-date:
+    runs-on: ubuntu-latest
+    needs: generate-date
+    steps:
+      - name: Print Received Output
+        run: |
+          echo "Date received from previous job: ${{ needs.generate-date.outputs.current_date }}"
+
