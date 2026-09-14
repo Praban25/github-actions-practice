@@ -22,16 +22,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint, test]
     steps:
-      - name: Print Pipeline Summary
+      - name: Print Branch Type (Main)
+        if: github.ref == 'refs/heads/main'
         run: |
-          echo "-- Pipeline Summary --"
+          echo "Branch Type: Main Branch Push"
 
-          # Check Branch Type using Context Variables
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; stream
-            echo "Branch Type: Main Branch Push"
-          else
-            echo "Branch Type: Feature Branch Push (${{ github.ref_name }})"
-          fi
+      - name: Print Branch Type (Feature)
+        if: github.ref != 'refs/heads/main'
+        run: |
+         echo "Branch Type: Feature Branch Push (${{ github.ref_name }}"
 
-          # Print the Commit Message from the Head Commit Context
-          echo "Commit Message: ${{ github.event.head_commit.message }}"
+      - name: Print Commit Message
+        run: |
+          echo " Commit Message: ${{ github.event.head_commit.message }}
+        if: github.ref == 'refs/heads/main'
