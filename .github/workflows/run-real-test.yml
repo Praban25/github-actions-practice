@@ -14,5 +14,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Debug workspace files
+        run: |
+          echo "Current working directory: $PWD"
+          ls -la
+          find . -name "check_status.py"
+
       - name: Run test script
         run: python scripts/check_status.py
