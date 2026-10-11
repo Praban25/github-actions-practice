@@ -1,0 +1,19 @@
+name: Generate and Upload Artifact
+on:
+  workflow_dispatch:
+
+jobs:
+  build_artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate a Test Report File
+        run: |
+          mkdir -p output
+          echo "This is a test report generated during the CI Build" > output/test-report.txt
+          echo "Build Timestamp: $(date) >> output/test.report.txt"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-test-report
+          path: output/test-report.txt
