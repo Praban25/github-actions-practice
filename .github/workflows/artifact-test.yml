@@ -10,7 +10,7 @@ jobs:
         run: |
           mkdir -p output
           echo "This is a test report generated during the CI Build" > output/test-report.txt
-          echo "Build Timestamp: $(date) >> output/test.report.txt"
+          echo "Build Timestamp: $(date) >> output/test-report.txt"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
