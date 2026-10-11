@@ -1,0 +1,35 @@
+name: Multi-Job Artifact Pipeline
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate a file
+        run: |
+          mkdir -p build-output
+          echo "Hello from Job 1! This file was passed securely to Job 2." > build-output/shared-data.txt
+          echo "Generated at: $(date)" >> build-output/shared-data.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: workflow-artifact
+          path: build-output/shared-data.txt
+
+  consume-job:
+    needs: generate-job  # Ensures Job 2 waits for Job 1 to finish successfully
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: workflow-artifact
+
+      - name: Use the downloaded file
+        run: |
+          echo "Successfully downloaded artifact from Job 1!"
+          echo "--- File Contents Start ---"
+          cat shared-data.txt
+          echo "--- File Contents End ---"
