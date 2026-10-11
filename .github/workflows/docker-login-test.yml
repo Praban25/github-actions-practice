@@ -1,0 +1,16 @@
+name: Docker Login Test
+on:
+  workflow_dispatch:
+
+jobs:
+  docker-login:
+    runs-on: ubuntu-latest
+    steps:
+      - name:
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+
+        run: |
+          # Use the environment variables safely in your command
+          echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USERNAME" --password-stdin
