@@ -21,4 +21,4 @@ jobs:
           find . -name "check_status.py"
 
       - name: Run test script
-        run: python scripts/check_status.py
+        run: python3 scripts/check_status.py
