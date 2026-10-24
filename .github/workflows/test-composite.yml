@@ -1,0 +1,23 @@
+name: Test Composite Action Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  run-custom-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Setup and Greet Action
+        id: my_custom_action
+        uses: ./.github/actions/setup-and-greet@main
+        with:
+          name: "Developer"
+          language: "en"
+
+      - name: Verify Action Output
+        run: |
+          echo "The composite action reported back 'greeted': ${{ steps.my_custom_action.outputs.greeted }}"
