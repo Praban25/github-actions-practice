@@ -26,7 +26,7 @@ jobs:
 
       - name: Print Build Details
         run: |
-          echo "Building ${{ inputs.app_name }} for {{ inputs.environment }}"
+          echo "Building ${{ inputs.app_name }} for ${{ inputs.environment }}"
 
       - name: Verify Docker Token Safely
         env:
