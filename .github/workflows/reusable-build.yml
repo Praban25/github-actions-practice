@@ -16,13 +16,28 @@ on:
       docker_token:
         description: 'Docker Hub token for authentication'
         required: true
+    outputs:
+      build_version:
+        description: 'The version string generated during the build'
+        value: ${{ jobs.build.outputs.version }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.generate_version.outputs.built_ver }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Generate Build Version
+        id: generate_version
+        run: |
+          # Creates a version like v1.0-abc1234 using the short git commit SHA
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          VERSION="v1.0-$SHORT_SHA"
+          echo "Generated version: $VERSION"
+          echo "built_ver=$VERSION" >> $GITHUB_OUTPUT          
 
       - name: Print Build Details
         run: |
