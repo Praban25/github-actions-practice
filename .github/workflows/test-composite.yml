@@ -13,7 +13,7 @@ jobs:
 
       - name: Run Setup and Greet Action
         id: my_custom_action
-        uses: ./.github/actions/setup-and-greet@main
+        uses: ./.github/actions/setup-and-greet
         with:
           name: "Developer"
           language: "en"
