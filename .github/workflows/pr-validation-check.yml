@@ -1,0 +1,84 @@
+name: PR Validation Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  file-size-check:
+    name: Check File Size
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify Changed Files Size (< 1MB)
+        run: |
+          BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+          git fetch origin "$BASE_BRANCH"
+          
+          FAILED=0
+          # 1 MB in bytes = 1048576
+          MAX_SIZE=1048576
+
+          echo "Scanning files changed against origin/$BASE_BRANCH..."
+          for file in $(git diff --name-only origin/$BASE_BRANCH HEAD); do
+            if [ -f "$file" ]; then
+              # Cross-platform file size check (Linux/macOS compatible)
+              size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null || echo 0)
+              if [ "$size" -gt "$MAX_SIZE" ]; then
+                echo "❌ File '$file' is too large ($size bytes). Limit is 1MB."
+                FAILED=1
+              else
+                echo "✅ Passed: $file ($size bytes)"
+              fi
+            fi
+          done
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo "Error: One or more files exceed the 1MB size limit."
+            exit 1
+          fi
+
+  branch-name-check:
+    name: Check Branch Name
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Branch Naming Convention
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          echo "Checking source branch: '$BRANCH'"
+          
+          # Match feature/*, fix/*, or docs/*
+          if [[ ! "$BRANCH" =~ ^(feature|fix|docs)/ ]]; then
+            echo "❌ Error: Branch name '$BRANCH' is invalid."
+            echo "Branch names must start with 'feature/', 'fix/', or 'docs/'."
+            exit 1
+          fi
+          
+          echo "✅ Branch name '$BRANCH' complies with guidelines."
+
+  pr-body-check:
+    name: Check PR Description
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify PR Body Exists
+        run: |
+          BODY=$(cat << 'EOF'
+          ${{ github.event.pull_request.body }}
+          EOF
+          )
+          
+          # Strip leading/trailing whitespaces
+          BODY_TRIMMED="$(echo -e "$BODY" | tr -d '[:space]')"
+          
+          if [ -z "$BODY_TRIMMED" ]; then
+            echo "⚠️ WARNING: This pull request is missing a description."
+            echo "Please add a description to help reviewers understand your changes."
+            # Exit 0 so it warns without failing the pipeline
+          else
+            echo "✅ PR description is present."
+          fi
