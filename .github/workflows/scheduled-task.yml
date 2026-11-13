@@ -1,0 +1,45 @@
+name: Scheduled Health Check & Tasks
+
+on:
+  schedule:
+    # 1. Every Monday at 2:30 AM UTC
+    - cron: '30 2 * * 1'
+    # 2. Every 6 hours
+    - cron: '0 */6 * * *'
+  
+  # Allows manual triggering for testing purposes
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    name: Run Health Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Identify Trigger
+        run: |
+          echo "=========================================="
+          echo "Trigger Event: ${{ github.event_name }}"
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "⏰ Matched Cron Schedule: ${{ github.event.schedule }}"
+          else
+            echo "🛠️ Manually triggered via workflow_dispatch"
+          fi
+          echo "=========================================="
+
+      - name: Perform Health Check (Curl URL)
+        run: |
+          echo "Pinging target endpoint..."
+          # Example using GitHub's status API as a sample health check target
+          URL="https://www.githubstatus.com/api/v2/status.json"
+          
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          
+          echo "Target URL: $URL"
+          echo "HTTP Response Status Code: $HTTP_STATUS"
+          
+          if [ "$HTTP_STATUS" -eq 200 ]; then
+            echo "✅ Health check passed successfully!"
+          else
+            echo "❌ Health check failed with status code: $HTTP_STATUS"
+            exit 1
+          fi
