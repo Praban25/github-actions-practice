@@ -1,0 +1,27 @@
+name: Smart Triggers & Filters
+
+on:
+  push:
+    branches:
+      - main
+      - 'release/*'
+    paths:
+      - 'src/**'
+      - 'app/**'
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+
+jobs:
+  smart-build:
+    name: Filtered Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Build
+        run: |
+          echo "🚀 Triggered because a change was pushed to src/ or app/ on an allowed branch!"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
