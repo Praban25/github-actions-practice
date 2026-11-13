@@ -1,0 +1,22 @@
+name: External Repository Dispatch
+
+on:
+  repository_dispatch:
+    types: [deploy-request]
+
+jobs:
+  handle-dispatch:
+    name: Process External Payload
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Read Client Payload
+        run: |
+          echo "=========================================="
+          echo "🌐 Received repository_dispatch event!"
+          echo "📦 Target Environment: ${{ github.event.client_payload.environment }}"
+          echo "👤 Triggered By Actor: ${{ github.actor }}"
+          echo "📄 Full Payload Data:  ${{ toJson(github.event.client_payload) }}"
+          echo "=========================================="
