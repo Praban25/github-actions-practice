@@ -2,3 +2,6 @@
 
 Testing PR check workflow
 # PR-lifecycle test
+
+Testing smart trigger workflow
+
