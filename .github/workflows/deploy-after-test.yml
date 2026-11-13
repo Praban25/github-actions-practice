@@ -1,0 +1,36 @@
+name: Deploy After Tests
+
+on:
+  workflow_run:
+    workflows: ["Run Tests"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Conditional Deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Upstream Workflow Status
+        run: |
+          echo "=========================================="
+          echo "Upstream Workflow: ${{ github.event.workflow.name }}"
+          echo "Upstream Conclusion: ${{ github.event.workflow_run.conclusion }}"
+          echo "=========================================="
+          
+          if [ "${{ github.event.workflow_run.conclusion }}" != "success" ]; then
+            echo "⚠️ WARNING: Upstream 'Run Tests' workflow failed or was canceled."
+            echo "Conclusion was: ${{ github.event.workflow_run.conclusion }}"
+            echo "Aborting deployment step."
+            exit 1
+          else
+            echo "✅ Upstream tests passed successfully!"
+          fi
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Simulate Deployment
+        run: |
+          echo "🚀 Starting deployment to production..."
+          echo "Application deployed successfully!"
